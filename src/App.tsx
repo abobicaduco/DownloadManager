@@ -12,6 +12,12 @@ interface DownloadTask {
   error?: string;
 }
 
+declare global {
+  interface Window {
+    pywebview: any;
+  }
+}
+
 export default function App() {
   const [url, setUrl] = useState('https://sto.romsfast.com/Mods/PS2/Winning%20Eleven%209%20Oliver%20Benji%20[NTSC-J].zip');
   const [path, setPath] = useState('C:/Downloads/Abobi');
@@ -23,17 +29,27 @@ export default function App() {
     if (!url) return;
     setIsAdding(true);
     try {
-      const response = await fetch('/api/download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, folder: path }),
-      });
-      const res = await response.json();
-      if (res.status === 'success') {
-        setUrl('');
-        fetchQueue();
+      // Check if running inside Python (pywebview)
+      if (window.pywebview?.api) {
+        const res = await window.pywebview.api.download_link(url, path);
+        if (res.status === 'success') {
+          setUrl('');
+          fetchQueue();
+        } else {
+          console.error("Erro ao adicionar:", res.message);
+        }
       } else {
-        console.error("Erro ao adicionar:", res.message);
+        // Fallback to Web API
+        const response = await fetch('/api/download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, folder: path }),
+        });
+        const res = await response.json();
+        if (res.status === 'success') {
+          setUrl('');
+          fetchQueue();
+        }
       }
     } catch (error) {
       console.error("Erro de conexão:", error);
@@ -44,9 +60,14 @@ export default function App() {
 
   const fetchQueue = async () => {
     try {
-      const response = await fetch('/api/queue');
-      const list = await response.json();
-      setDownloads(list);
+      if (window.pywebview?.api) {
+        const list = await window.pywebview.api.get_queue();
+        setDownloads(list);
+      } else {
+        const response = await fetch('/api/queue');
+        const list = await response.json();
+        setDownloads(list);
+      }
     } catch (e) {
       // Backend might not be ready yet
     }
@@ -73,7 +94,11 @@ export default function App() {
 
   const clearHistory = async () => {
     try {
-      await fetch('/api/clear-history', { method: 'POST' });
+      if (window.pywebview?.api) {
+        await window.pywebview.api.clear_history();
+      } else {
+        await fetch('/api/clear-history', { method: 'POST' });
+      }
       fetchQueue();
     } catch (error) {
       console.error("Erro ao limpar histórico:", error);
@@ -98,10 +123,16 @@ export default function App() {
             <span className="font-bold text-xs tracking-[0.2em]">ABOBIDOWNLOADER</span>
           </div>
           <div className="flex gap-2">
-            <button className="p-1.5 hover:bg-white/10 rounded-md transition-colors text-gray-400">
+            <button 
+              onClick={() => window.pywebview?.api?.minimize_app()}
+              className="p-1.5 hover:bg-white/10 rounded-md transition-colors text-gray-400"
+            >
               <Minus size={16} />
             </button>
-            <button className="p-1.5 hover:bg-red-500/80 hover:text-white rounded-md transition-colors text-gray-400">
+            <button 
+              onClick={() => window.pywebview?.api?.close_app()}
+              className="p-1.5 hover:bg-red-500/80 hover:text-white rounded-md transition-colors text-gray-400"
+            >
               <X size={16} />
             </button>
           </div>
