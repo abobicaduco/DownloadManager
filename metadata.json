@@ -1,0 +1,5 @@
+{
+  "name": "AbobiDownloader",
+  "description": "A high-performance download manager with a sleek Aero/Mica interface, featuring real-time progress tracking and error logging.",
+  "requestFramePermissions": []
+}
