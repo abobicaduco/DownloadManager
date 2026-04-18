@@ -1,5 +1,5 @@
 {
-  "name": "AbobiDownloader",
-  "description": "A high-performance download manager with a sleek Aero/Mica interface, featuring real-time progress tracking and error logging.",
+  "name": "AriaQueue",
+  "description": "Open-source React + TypeScript download queue: aria2 backend, optional HTTP headers, bilingual UI. Safe for GitHub/portfolio.",
   "requestFramePermissions": []
 }

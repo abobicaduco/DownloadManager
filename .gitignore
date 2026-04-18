@@ -1,8 +1,50 @@
+# Dependencies & build
 node_modules/
-build/
 dist/
+build/
 coverage/
-.DS_Store
-*.log
-.env*
+*.tsbuildinfo
+
+# Environment & secrets (never commit real values)
+.env
+.env.*
 !.env.example
+
+# Logs & caches
+*.log
+npm-debug.log*
+.cache/
+.npm/
+
+# OS & editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Stray / local artifacts
+/npm
+
+# ---------------------------------------------------------------------------
+# Private / internal — keep ONLY on your machine or corporate git
+# (place real files here or use names below; they must NOT reach GitHub)
+# ---------------------------------------------------------------------------
+private/
+
+# Internal automation & dashboards (company-specific)
+DownloadManager.py
+ServidorCron.py
+ServerCron.py
+ServidorCron.html
+ServidorCron*.html
+ServerCron*.html
+*ServidorCron*
+*ServerCron*
+
+# Local overrides
+*.local.py
+local_config.py
+*_secret*
+*_private*
