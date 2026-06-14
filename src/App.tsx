@@ -6,6 +6,7 @@ import { useDownloadQueue } from './hooks/useDownloadQueue.ts';
 import { useBackendHealth } from './hooks/useBackendHealth.ts';
 import { WebHeader } from './components/WebHeader.tsx';
 import { WebFooter } from './components/WebFooter.tsx';
+import { PixDonate } from './components/PixDonate.tsx';
 import { QueueView } from './components/QueueView.tsx';
 import { ErrorsView } from './components/ErrorsView.tsx';
 import type { HttpDownloadExtras } from './types/http-download.ts';
@@ -228,6 +229,7 @@ export default function App() {
             )}
           </AnimatePresence>
 
+          <PixDonate />
           <WebFooter s={s} />
         </div>
       </div>
